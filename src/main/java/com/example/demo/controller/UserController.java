@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.Userservice.JwtService;
+import com.example.demo.Userservice.UserDetailsInfoService;
 import com.example.demo.dto.AuthRequest;
 import com.example.demo.entity.User;
 import com.example.demo.repo.UserRepo;
@@ -19,9 +20,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 
 @RestController
 public class UserController {
+    @Autowired
+    UserDetailsInfoService userDetailsInfoService;
     @Autowired
     private PasswordEncoder passwordEncoder;
     @Autowired
@@ -31,12 +36,12 @@ public class UserController {
     @Autowired
     UserRepo repo;
 
+
     @PostMapping("/saveUser")
     public ResponseEntity<String> saveUser(@RequestBody User user){
         user.setPassword(passwordEncoder.encode(user.getPassword()));
        user.setRoles("ROLE_USER");
-        System.out.println(user.getUserName());
-        System.out.println(user.getId());
+
         User user2 = repo.save(user);
         System.out.println(user2.getUserName());
         System.out.println(user2.getId());
@@ -50,7 +55,9 @@ public class UserController {
                     new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
 
             if (authentication.isAuthenticated()) {
-                String token = jwtService.generateToken(authRequest.getUsername());
+                List<String> roles = userDetailsInfoService.getUserRoles(authRequest.getUsername());
+                String token = jwtService.generateToken(authRequest.getUsername(),roles);
+
                 System.out.print(token);
                 return ResponseEntity.ok(token);
             } else {
