@@ -47,5 +47,7 @@ public class UserDetailsInfoService implements org.springframework.security.core
     }
 
 
-
+    public List<User> getUsersBySearch(String search) {
+        return userRepo.findByUserNameContainingIgnoreCase(search);
+    }
 }
