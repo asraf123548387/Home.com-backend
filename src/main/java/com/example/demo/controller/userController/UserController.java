@@ -1,4 +1,4 @@
-package com.example.demo.controller;
+package com.example.demo.controller.userController;
 
 import com.example.demo.Userservice.JwtService;
 import com.example.demo.Userservice.UserDetailsInfoService;
@@ -6,7 +6,7 @@ import com.example.demo.dto.AuthRequest;
 import com.example.demo.entity.User;
 import com.example.demo.repo.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -52,11 +52,11 @@ public class UserController {
     public ResponseEntity<String> authenticateAndGetToken(@RequestBody AuthRequest authRequest) {
         try {
             Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
+                    new UsernamePasswordAuthenticationToken(authRequest.getEmail(), authRequest.getPassword()));
 
             if (authentication.isAuthenticated()) {
-                List<String> roles = userDetailsInfoService.getUserRoles(authRequest.getUsername());
-                String token = jwtService.generateToken(authRequest.getUsername(),roles);
+                List<String> roles = userDetailsInfoService.getUserRoles(authRequest.getEmail());
+                String token = jwtService.generateToken(authRequest.getEmail(),roles);
 
                 System.out.print(token);
                 return ResponseEntity.ok(token);

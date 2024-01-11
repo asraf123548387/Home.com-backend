@@ -18,7 +18,7 @@ public class UserDetails implements org.springframework.security.core.userdetail
         return  authorities;
     }
         public UserDetails(User userInfo) {
-        userName=userInfo.getUserName();
+        userName=userInfo.getEmail();
         password=userInfo.getPassword();
         authorities= Arrays.stream(userInfo.getRoles().split(","))
                 .map(SimpleGrantedAuthority::new)

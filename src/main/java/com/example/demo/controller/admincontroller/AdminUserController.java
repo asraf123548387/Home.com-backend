@@ -1,4 +1,4 @@
-package com.example.demo.controller;
+package com.example.demo.controller.admincontroller;
 
 import com.example.demo.Userservice.UserDetailsInfoService;
 import com.example.demo.entity.User;
@@ -6,8 +6,6 @@ import com.example.demo.repo.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,7 +16,7 @@ import java.util.Optional;
 
 @RestController
 
-public class AdminController {
+public class AdminUserController {
     @Autowired
     UserDetailsInfoService userDetailsInfoService;
     @Autowired
@@ -51,20 +49,12 @@ public class AdminController {
     }
 
 
-    @DeleteMapping("/admin/usersDelete/{userId}")  // Use {userId} here
-    public ResponseEntity<?> deleteUser(@PathVariable Long userId) {
-        try {
-            userDetailsInfoService.deleteUser(userId);
-            return ResponseEntity.ok("User deleted successfully");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error deleting user");
-        }
-    }
+
 
     @PostMapping("/adminSaveAddUser")
     public ResponseEntity<String> saveUser(@RequestBody User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setRoles("ROLE_USER");
+        user.setRoles("ROLE_ADMIN");
 
         User user2 = repo.save(user);
 //        System.out.println(user2.getUserName());

@@ -18,7 +18,7 @@ public class UserDetailsInfoService implements org.springframework.security.core
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<User> userInfo = userRepo.findByUserName(username);
+        Optional<User> userInfo = userRepo.findByEmail(username);
 
         return userInfo.map(com.example.demo.Userservice.UserDetails::new)
                 .orElseThrow(() -> new UsernameNotFoundException("user not found " + username));
@@ -36,7 +36,7 @@ public class UserDetailsInfoService implements org.springframework.security.core
 
     }
     public List<String> getUserRoles(String username) {
-        Optional<User> userOptional = userRepo.findByUserName(username);
+        Optional<User> userOptional = userRepo.findByEmail(username);
 
         if (userOptional.isPresent()) {
             User user = userOptional.get();
