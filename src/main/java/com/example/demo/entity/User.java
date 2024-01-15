@@ -19,8 +19,10 @@ public class User {
         private String password;
 
         private String mobile;
-
+        private String otp;
         private String email;
         private String roles;
+        private boolean verified;
+
     }
 

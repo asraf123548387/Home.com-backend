@@ -36,7 +36,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
         return http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth->{
-                    auth.requestMatchers("/saveUser", "/", "/login").permitAll();
+                    auth.requestMatchers("/saveUser", "/", "/login","/verifyOtp","/forgotPassword","/verifyForgotPassword").permitAll();
                     auth.requestMatchers("/admin/**").hasRole("ADMIN");
                     auth.anyRequest().authenticated();
                 })
@@ -46,11 +46,10 @@ public class SecurityConfig {
                 .build();
 
     }
-      @Bean
-    public PasswordEncoder passwordEncoder()
-  {
-      return new BCryptPasswordEncoder();
-  }
+    @Bean
+    public BCryptPasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
     @Bean
     public AuthenticationProvider authenticationProvider(){
         DaoAuthenticationProvider authenticationProvider=new DaoAuthenticationProvider();
