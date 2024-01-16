@@ -23,6 +23,7 @@ public class User {
         private String email;
         private String roles;
         private boolean verified;
+        private boolean isBlocked;
 
     }
 

@@ -20,4 +20,8 @@ public interface UserRepo extends JpaRepository<User,Long> {
 
     @Query("SELECT u FROM User u WHERE u.otp = :otp")
     User findByOtp(@Param("otp") String otp);
+
+    List<User> findALlByRolesContaining(String roleAdmin);
+
+    List<User> findByUserNameContainingIgnoreCaseAndRolesContainingIgnoreCase(String search, String roleUser);
 }

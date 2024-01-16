@@ -3,6 +3,7 @@ package com.example.demo.Userservice;
 import com.example.demo.entity.User;
 import com.example.demo.repo.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -25,13 +26,22 @@ public class UserDetailsInfoService implements org.springframework.security.core
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<User> userInfo = userRepo.findByEmail(username);
+        if (userInfo.isEmpty())
+        {
+            throw new UsernameNotFoundException("invalid username or password");
 
+        }
+        User user=userInfo.get();
+        if(user.isBlocked())
+        {
+            throw new DisabledException("User is blocked");
+        }
         return userInfo.map(com.example.demo.Userservice.UserDetails::new)
                 .orElseThrow(() -> new UsernameNotFoundException("user not found " + username));
     }
 
     public List<User> getAllUsers() {
-        return userRepo.findAll();
+        return userRepo.findALlByRolesContaining("ROLE_USER");
     }
 
     public void deleteUser(Long userId) {
@@ -54,7 +64,7 @@ public class UserDetailsInfoService implements org.springframework.security.core
 
 //user search
     public List<User> getUsersBySearch(String search) {
-        return userRepo.findByUserNameContainingIgnoreCase(search);
+        return userRepo.findByUserNameContainingIgnoreCaseAndRolesContainingIgnoreCase(search, "ROLE_USER");
     }
 
     public boolean isEmailAlreadyRegistered(String email) {
@@ -79,5 +89,34 @@ public class UserDetailsInfoService implements org.springframework.security.core
 
             return false;
         }
+    }
+
+    public void blockUser(long userId) {
+     Optional<User>  optionalUser=userRepo.findById(userId);
+     if(optionalUser.isPresent()){
+         User user=optionalUser.get();
+         user.setBlocked(true);
+         userRepo.save(user);
+
+     }
+    }
+
+    public void unblockUser(long userId) {
+        Optional<User> optionalUser=userRepo.findById(userId);
+        if(optionalUser.isPresent())
+        {
+            User user =optionalUser.get();
+            user.setBlocked(false);
+            userRepo.save(user);
+        }
+    }
+
+    public List<User> getAllAdmins() {
+        return userRepo.findALlByRolesContaining("ROLE_ADMIN");
+
+    }
+
+    public List<User> getAdminsBySearch(String search) {
+        return userRepo.findByUserNameContainingIgnoreCaseAndRolesContainingIgnoreCase(search, "ROLE_ADMIN");
     }
 }
