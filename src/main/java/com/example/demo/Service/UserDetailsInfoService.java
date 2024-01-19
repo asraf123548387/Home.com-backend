@@ -1,4 +1,4 @@
-package com.example.demo.Userservice;
+package com.example.demo.Service;
 
 import com.example.demo.entity.User;
 import com.example.demo.repo.UserRepo;
@@ -21,6 +21,7 @@ public class UserDetailsInfoService implements org.springframework.security.core
     private BCryptPasswordEncoder passwordEncoder;
 
     public UserDetailsInfoService() {
+
     }
 
     @Override
@@ -36,7 +37,7 @@ public class UserDetailsInfoService implements org.springframework.security.core
         {
             throw new DisabledException("User is blocked");
         }
-        return userInfo.map(com.example.demo.Userservice.UserDetails::new)
+        return userInfo.map(com.example.demo.Service.UserDetails::new)
                 .orElseThrow(() -> new UsernameNotFoundException("user not found " + username));
     }
 
@@ -119,4 +120,12 @@ public class UserDetailsInfoService implements org.springframework.security.core
     public List<User> getAdminsBySearch(String search) {
         return userRepo.findByUserNameContainingIgnoreCaseAndRolesContainingIgnoreCase(search, "ROLE_ADMIN");
     }
+
+
+    public Long getUserId(String userEmail) {
+        Optional<User> optionalUser = userRepo.findByEmail(userEmail);
+
+        return optionalUser.map(User::getId).orElse(null);
+    }
+
 }

@@ -1,6 +1,6 @@
 package com.example.demo.controller.superAdminController;
 
-import com.example.demo.Userservice.UserDetailsInfoService;
+import com.example.demo.Service.UserDetailsInfoService;
 import com.example.demo.entity.User;
 import com.example.demo.repo.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;

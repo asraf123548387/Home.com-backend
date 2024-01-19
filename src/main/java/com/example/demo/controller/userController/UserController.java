@@ -1,8 +1,9 @@
 package com.example.demo.controller.userController;
 
-import com.example.demo.Userservice.JwtService;
-import com.example.demo.Userservice.UserDetailsInfoService;
+import com.example.demo.Service.JwtService;
+import com.example.demo.Service.UserDetailsInfoService;
 import com.example.demo.dto.AuthRequest;
+import com.example.demo.dto.AuthResponse;
 import com.example.demo.dto.VerificationRequest;
 import com.example.demo.entity.User;
 import com.example.demo.repo.UserRepo;
@@ -18,7 +19,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -97,23 +97,26 @@ public class UserController {
 
     //Login section
     @PostMapping("/login")
-    public ResponseEntity<String> authenticateAndGetToken(@RequestBody AuthRequest authRequest) {
+    public ResponseEntity<AuthResponse> authenticateAndGetToken(@RequestBody AuthRequest authRequest) {
         try {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(authRequest.getEmail(), authRequest.getPassword()));
 
             if (authentication.isAuthenticated()) {
+                String userEmail= authRequest.getEmail();
                 List<String> roles = userDetailsInfoService.getUserRoles(authRequest.getEmail());
+                Long userId=userDetailsInfoService.getUserId(userEmail);
                 String token = jwtService.generateToken(authRequest.getEmail(),roles);
-
+                System.out.println(userId);
                 System.out.print(token);
-                return ResponseEntity.ok(token);
+                AuthResponse authResponse=new AuthResponse(token,userId);
+                return ResponseEntity.ok(authResponse);
             } else {
                 throw new UsernameNotFoundException("Invalid user request!");
             }
         } catch (AuthenticationException e) {
             // Handle authentication failure
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Authentication failed: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
     }
 

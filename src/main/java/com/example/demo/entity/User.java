@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -24,6 +27,7 @@ public class User {
         private String roles;
         private boolean verified;
         private boolean isBlocked;
-
+        @OneToMany(mappedBy = "adminUser",cascade =CascadeType.ALL,fetch =FetchType.LAZY)
+        private List<Hotel> adminHotels;
     }
 
