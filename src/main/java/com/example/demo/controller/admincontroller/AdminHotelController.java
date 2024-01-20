@@ -2,6 +2,7 @@ package com.example.demo.controller.admincontroller;
 
 
 import com.example.demo.Service.HotelService;
+import com.example.demo.dto.HotelDTO;
 import com.example.demo.entity.Hotel;
 import com.example.demo.entity.User;
 import com.example.demo.repo.HotelRepo;
@@ -24,7 +25,7 @@ public class AdminHotelController {
     UserRepo userRepo;
 
     @GetMapping("/hotelList")
-    public ResponseEntity<?> getAllUsers(@RequestParam(name = "search", required = false) String search) {
+    public ResponseEntity<?> getAllHotels(@RequestParam(name = "search", required = false) String search) {
         try {
             List<Hotel> hotels;
 
@@ -46,26 +47,20 @@ public class AdminHotelController {
     }
 
 @PostMapping("/savehotel")
-public ResponseEntity<String> saveHotel(@RequestBody Hotel hotel, @RequestParam Long userId){
+public ResponseEntity<String> saveHotel(@RequestBody HotelDTO hotelDTO){
 
-    try {
-        // Retrieve the user by ID and set it to the hotel
-        User adminUser = userRepo.findById(userId).orElse(null);
-        if (adminUser == null) {
-            // Handle the case when the user is not found
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
-        }
-
-        // Set the adminUser for the hotel
-        hotel.setAdminUser(adminUser);
-
-        // Save the hotel
-        hotelRepo.save(hotel);
-
-        return ResponseEntity.ok("Hotel saved successfully");
-    } catch (Exception e) {
-        // Handle any exceptions that occurred during the request
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error saving hotel: " + e.getMessage());
-    }
+   Long userId= hotelDTO.getUserId();
+   User adminUser=userRepo.findById(userId).orElseThrow(()->new RuntimeException("User not found with id: " + userId));
+   Hotel hotel=new Hotel();
+   hotel.setHotelName(hotelDTO.getHotelName());
+   hotel.setAddress(hotelDTO.getAddress());
+   hotel.setPhone(hotelDTO.getPhone());
+   hotel.setLocation(hotelDTO.getLocation());
+   hotel.setEmail(hotelDTO.getEmail());
+   hotel.setDescription(hotelDTO.getDescription());
+    hotel.setImages(hotelDTO.getImages());
+    hotel.setAdminUser(adminUser);
+    hotelRepo.save(hotel);
+    return ResponseEntity.ok("Hotel added successfully");
 }
 }

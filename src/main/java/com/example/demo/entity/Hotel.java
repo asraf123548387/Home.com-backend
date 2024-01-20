@@ -1,5 +1,6 @@
 package com.example.demo.entity;
 
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -22,7 +23,7 @@ public class Hotel {
     private String email;
     private String description;
     private double rating;
-
+    private String location;
     private String images;
     @ManyToOne
     @JoinColumn(name="adminUserId")
