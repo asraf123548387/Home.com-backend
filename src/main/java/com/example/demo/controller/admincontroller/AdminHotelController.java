@@ -37,7 +37,7 @@ public class AdminHotelController {
                 // If no search parameter, fetch all users
                 hotels = hotelService.getAllHotels();
             }
-
+             System.out.println(hotels);
             // Return the list of users
             return ResponseEntity.ok(hotels);
         } catch (Exception e) {

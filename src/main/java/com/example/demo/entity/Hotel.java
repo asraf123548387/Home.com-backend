@@ -1,6 +1,8 @@
 package com.example.demo.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -9,7 +11,6 @@ import java.util.List;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
 @Getter
 @Setter
 
@@ -26,8 +27,10 @@ public class Hotel {
     private String location;
     private String images;
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name="adminUserId")
     private User adminUser;
+    @JsonManagedReference
     @OneToMany(mappedBy = "hotel",cascade =CascadeType.ALL,fetch =FetchType.LAZY)
     private List<Room> rooms;
 }
