@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/admin")
@@ -63,4 +64,42 @@ public ResponseEntity<String> saveHotel(@RequestBody HotelDTO hotelDTO){
     hotelRepo.save(hotel);
     return ResponseEntity.ok("Hotel added successfully");
 }
+
+@GetMapping("/hotel/{hotelId}")
+    public ResponseEntity<Hotel> getHotelByIdDetails(@PathVariable Long hotelId){
+        Hotel hotel=hotelService.getHotelById(hotelId);
+        return ResponseEntity.ok(hotel);
+}
+    @PutMapping("/hotel/{hotelId}")
+    public ResponseEntity<Hotel> updateHotel(@PathVariable Long hotelId, @RequestBody HotelDTO hotelDTO) {
+        try {
+            // Retrieve the existing hotel by ID
+            Hotel existingHotel = hotelService.getHotelById(hotelId);
+
+            // Check if the hotel with the given ID exists
+            if (existingHotel == null) {
+                return ResponseEntity.notFound().build();
+            }
+
+            // Update the hotel details with the values from the DTO
+            existingHotel.setAddress(hotelDTO.getAddress());
+
+            existingHotel.setDescription(hotelDTO.getDescription());
+            existingHotel.setImages(hotelDTO.getImages());
+            existingHotel.setEmail(hotelDTO.getEmail());
+            existingHotel.setHotelName(hotelDTO.getHotelName());
+            existingHotel.setPhone(hotelDTO.getPhone());
+            existingHotel.setLocation(hotelDTO.getLocation());
+
+            // Save the updated hotel
+            Hotel updatedHotel = hotelService.updateHotel(existingHotel);
+
+            // Return the updated hotel in the response
+            return ResponseEntity.ok(updatedHotel);
+        } catch (Exception e) {
+            // Handle exceptions or validation errors
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
+
 }

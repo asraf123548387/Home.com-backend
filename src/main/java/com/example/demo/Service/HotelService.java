@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class HotelService {
@@ -20,5 +21,16 @@ public class HotelService {
     public List<Hotel> getAllHotels() {
 
         return hotelRepo.findAll();
+    }
+
+    public Hotel getHotelById(Long hotelId) {
+        Optional<Hotel> hotelOptional=hotelRepo.findById(hotelId);
+        return hotelOptional.orElse(null);
+
+    }
+
+    public Hotel updateHotel(Hotel existingHotel) {
+        Hotel updatedHotel = hotelRepo.save(existingHotel);
+        return updatedHotel;
     }
 }

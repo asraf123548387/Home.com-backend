@@ -69,15 +69,7 @@ public class AdminUserController {
 
 
 
-//    @PostMapping("/adminSaveAddUser")
-//    public ResponseEntity<String> saveUser(@RequestBody User user) {
-//        user.setPassword(passwordEncoder.encode(user.getPassword()));
-//        user.setRoles("ROLE_ADMIN");
-//
-//        User user2 = repo.save(user);
-//
-//        return new ResponseEntity<String>("User Saved", HttpStatus.OK);
-//    }
+
 
 
 //    @GetMapping("/adminUpdateUsers/{userId}")
