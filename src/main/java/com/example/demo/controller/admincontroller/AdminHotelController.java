@@ -60,6 +60,7 @@ public ResponseEntity<String> saveHotel(@RequestBody HotelDTO hotelDTO){
    hotel.setEmail(hotelDTO.getEmail());
    hotel.setDescription(hotelDTO.getDescription());
     hotel.setImages(hotelDTO.getImages());
+    hotel.setPrice(hotel.getPrice());
     hotel.setAdminUser(adminUser);
     hotelRepo.save(hotel);
     return ResponseEntity.ok("Hotel added successfully");
@@ -90,6 +91,7 @@ public ResponseEntity<String> saveHotel(@RequestBody HotelDTO hotelDTO){
             existingHotel.setHotelName(hotelDTO.getHotelName());
             existingHotel.setPhone(hotelDTO.getPhone());
             existingHotel.setLocation(hotelDTO.getLocation());
+            existingHotel.setPrice(hotelDTO.getPrice());
 
             // Save the updated hotel
             Hotel updatedHotel = hotelService.updateHotel(existingHotel);

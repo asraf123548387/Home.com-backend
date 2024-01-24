@@ -22,10 +22,12 @@ public class Hotel {
     private String address;
     private String phone;
     private String email;
+    @Column(length = 1000)
     private String description;
     private double rating;
     private String location;
     private String images;
+    private String price;
     @ManyToOne
     @JsonBackReference
     @JoinColumn(name="adminUserId")
